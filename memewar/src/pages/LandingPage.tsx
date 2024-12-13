@@ -38,7 +38,7 @@ export const LandingPage = ({ setPage }: PageProps) => {
         height="100%"
         alignment="middle center"
         gap="large"
-        backgroundColor='white'
+        backgroundColor='#FC9E4F'
       >
         <image
           imageHeight={1024}
@@ -61,7 +61,7 @@ export const LandingPage = ({ setPage }: PageProps) => {
       height="100%"
       gap='medium'
       alignment="middle center"
-      backgroundColor='white'
+      backgroundColor='#FC9E4F'
     >
       <image
           imageHeight={1024}
