@@ -2,7 +2,7 @@
 import { Devvit, useState } from '@devvit/public-api';
 import { LandingPage } from './pages/LandingPage.js';
 import { VotingPage } from './pages/VotingPage.js';
-import { WarPage } from './pages/WarPage.js';
+import { GamePage } from './pages/GamePage.js';
 
 
 Devvit.configure({
@@ -49,8 +49,8 @@ Devvit.addCustomPostType({
       case 'voting':
         currentPage = <VotingPage setPage={setPage} />;
         break;
-      case 'war':
-        currentPage = <WarPage setPage={setPage} />;
+      case 'game':
+        currentPage = <GamePage setPage={setPage} />;
         break;
       default:
         currentPage = <LandingPage setPage={setPage} />;

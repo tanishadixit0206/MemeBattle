@@ -5,11 +5,11 @@ Devvit.configure({
   http: true
 });
 
-type WarPageProps = {
+type GamePageProps = {
   setPage: (page: string) => void;
 }
 
-export const WarPage = ({ setPage }: WarPageProps) => {
+export const GamePage = ({ setPage }: GamePageProps) => {
   return (
     <vstack height="100%" alignment="center" gap="medium">
       <text>Hello war page</text>
@@ -24,7 +24,7 @@ export const WarPage = ({ setPage }: WarPageProps) => {
         {/* Right Section */}
         <vstack width="50%" height="100%" alignment="center" gap="medium">
           <image url="chillguy.jpg" imageWidth={100} imageHeight={100} />
-          
+          {/* add form for input */}
         </vstack>
       </hstack>
 

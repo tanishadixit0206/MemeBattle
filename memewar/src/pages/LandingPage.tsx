@@ -81,7 +81,7 @@ export const LandingPage = ({ setPage }: PageProps) => {
             <spacer size='medium' shape='square' />
           </hstack>
       </vstack>
-      <hstack>
+      <hstack gap='medium'>
         <button 
           appearance='secondary' 
           onPress={joinRoom}
