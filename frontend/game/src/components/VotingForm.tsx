@@ -2,11 +2,11 @@ import { Devvit, Context, useState } from "@devvit/public-api";
 
 interface User {
   username: string;
-  url: string;
+  profileUrl: string;
   votes: number;
 }
 
-export const VotingForm = (props: { users: User[] }, context: Context): JSX.Element => {
+export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateUsers:(array:User[])=>void}, context: Context): JSX.Element => {
   const [selection, setSelection] = useState<string>('');
   const [hasVoted, setHasVoted] = useState<boolean>(false);
 
@@ -17,7 +17,7 @@ export const VotingForm = (props: { users: User[] }, context: Context): JSX.Elem
   );
 
   const VotingScreen = (
-    <vstack padding='medium' alignment='start' gap='medium' grow>
+    <vstack padding='medium' alignment='start'>
       {props.users.map((user) => (
         <hstack
           alignment='middle'
@@ -41,7 +41,7 @@ export const VotingForm = (props: { users: User[] }, context: Context): JSX.Elem
   );
 
   const ResultsScreen = (
-    <vstack alignment='start' gap='small' padding='medium' grow>
+    <vstack alignment='start' padding='medium'>
       {props.users.map((user) => {
         const percentage = totalVotes > 0 
           ? Math.round((user.votes / totalVotes) * 100) 
@@ -79,13 +79,6 @@ export const VotingForm = (props: { users: User[] }, context: Context): JSX.Elem
           Voting
         </text>
         <spacer size='small' />
-        <text size='small' weight='bold' color='neutral-content-weak'>
-          •
-        </text>
-        <spacer size='small' />
-        <text size='small' weight='bold' color='neutral-content-weak'>
-          {totalVotes} total votes
-        </text>
       </hstack>
       <hstack height='1px' />
     </vstack>
@@ -105,15 +98,36 @@ export const VotingForm = (props: { users: User[] }, context: Context): JSX.Elem
                   ? { ...user, votes: user.votes + 1 } 
                   : user
               );
+              // ! to have a function from gamePage to set voting on to false and start with new meme and storing 
+              props.updateUsers(updatedUsers)
               setHasVoted(true);
             }}
           >
             Vote
           </button>
         )}
-        <text color='neutral-content-weak' size='small'>
-          15 hours 11 minutes left
-        </text>
+
+      </hstack>
+      <spacer size="small" />
+    </vstack>
+  );
+
+  const Footer_2 = () => (
+    <vstack>
+      <hstack gap='small' alignment='middle' padding='medium' height='32px'>
+        {hasVoted && (
+          <button
+            appearance='primary'
+            size='small'
+            disabled={!selection}
+            onPress={() => {
+              props.votingClosed()
+            }}
+          >
+            Next Meme 
+          </button>
+        )}
+
       </hstack>
       <spacer size="small" />
     </vstack>
@@ -123,7 +137,7 @@ export const VotingForm = (props: { users: User[] }, context: Context): JSX.Elem
     <vstack height='100%'>
       <Header />
       {hasVoted ? ResultsScreen : VotingScreen}
-      <Footer />
+      {!hasVoted ? <Footer/>:<Footer_2/>}
     </vstack>
   );
 };

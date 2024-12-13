@@ -3,7 +3,7 @@ import { Devvit, useState } from "@devvit/public-api";
 
 interface User {
   username : string;
-  url : string;
+  profileUrl : string;
   votes: number;
 }
 

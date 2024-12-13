@@ -1,4 +1,8 @@
-  export const joined_users = [
+import { User } from "./types.js";
+
+  
+
+  export const joined_users : User[] = [
     {
         "username": "technovator",
         "profileUrl": "https://example.com/users/technovator",
