@@ -39,7 +39,7 @@ Devvit.addCustomPostType({
   name: 'Name',
   render: context => {
     const { useState } = context;
-    const [page, setPage] = useState('a');
+    const [page, setPage] = useState('home');
 
     let currentPage;
     switch (page) {
@@ -50,7 +50,8 @@ Devvit.addCustomPostType({
         currentPage = <VotingPage setPage={setPage} />;
         break;
       case 'war':
-        currentPage = <WarPage setPage={setPage} />
+        currentPage = <WarPage setPage={setPage} />;
+        break;
       default:
         currentPage = <LandingPage setPage={setPage} />;
     }
