@@ -5,6 +5,7 @@ import { GamePage } from './pages/gamePage.js';
 Devvit.configure({
   redditAPI: true,
   redis: true,
+  realtime:true,
 });
 
 Devvit.addCustomPostType({
