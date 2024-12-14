@@ -4,16 +4,16 @@ import { MemeTile } from "../components/MemeTile.js";
 import { joined_users } from "../../constants.js";
 import VotingForm from "../components/VotingForm.js";
 import { User } from "../../types.js";
+import { Timer } from "../components/Timer.js";
 
 export const GamePage = (context: Devvit.Context): JSX.Element => {
 
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
   const [messages, setMessages] = useState<string[]>([]);
   const [votingOn, setVotingOn] = useState<boolean>(false);
-  // const [users,setUsers] = useState<User[]>(joined_users)/
-
 const updateVotes = (joined_users_array:User[]) =>{
     for (let index = 0; index < joined_users_array.length; index++) {
+      console.log("idhar hai hum")
       const element_to_be_copied = joined_users_array[index]
       joined_users[index]['votes'] = element_to_be_copied['votes']
     }
@@ -43,6 +43,12 @@ const updateVotes = (joined_users_array:User[]) =>{
 
   const votingDone = ()=>{
     setVotingOn(false)
+    //! logic of fetching new meme and resetting the game is to be written here
+  }
+
+  function time_is_up(){
+    setLoading(true)
+    //! logic of fetching new meme and resetting the game is to be written here
   }
 
 
@@ -61,7 +67,11 @@ const updateVotes = (joined_users_array:User[]) =>{
           </vstack>
           <spacer width="3%" />
           <vstack padding="small" width="38%" border="thick" borderColor="#FFB22C" cornerRadius="medium" backgroundColor="#FFDE4D">
-            {loading ? <MemeTile /> : <text>Meme is Loading ...</text>}
+            {loading ? <text height="88%">Meme is Loading ...</text>:<MemeTile />}
+            <spacer width="1%"></spacer>
+            <hstack alignment="middle center" width="100%" height="10%" cornerRadius="large" backgroundColor="#FA4032">
+              <Timer context={context} time_is_up = {time_is_up} />
+            </hstack>
           </vstack>
           <spacer width="3%" />
           <vstack width="31.5%" border="thick" borderColor="#FFB22C" cornerRadius="medium" backgroundColor="#FFDE4D" >

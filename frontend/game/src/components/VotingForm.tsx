@@ -95,7 +95,7 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
             onPress={() => {
               const updatedUsers = props.users.map(user => 
                 user.username === selection 
-                  ? { ...user, votes: user.votes + 1 } 
+                  ? { ...user, votes: user.votes + 5} 
                   : user
               );
               // ! to have a function from gamePage to set voting on to false and start with new meme and storing 
@@ -122,6 +122,7 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
             disabled={!selection}
             onPress={() => {
               props.votingClosed()
+              resetTimer(context)
             }}
           >
             Next Meme 
@@ -132,6 +133,10 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
       <spacer size="small" />
     </vstack>
   );
+
+  async function resetTimer(context:Devvit.Context) {
+    await context.redis.set('time','reset')
+  }
 
   return (
     <vstack height='100%'>
