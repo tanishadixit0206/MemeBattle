@@ -6,6 +6,7 @@ Devvit.configure({
   redditAPI: true,
   redis: true,
   realtime:true,
+  http: true,
 });
 
 Devvit.addCustomPostType({

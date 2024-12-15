@@ -1,18 +1,15 @@
 import { Devvit, Context, useState } from "@devvit/public-api";
+import {  User_Details } from "../utils/types.js";
+import { updateUserVotes } from "../redis/reddisFunctions.js";
 
-interface User {
-  username: string;
-  profileUrl: string;
-  votes: number;
-}
-
-export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateUsers:(array:User[])=>void}, context: Context): JSX.Element => {
+export const VotingForm = (props: { users: User_Details[] }, context: Context): JSX.Element => {
   const [selection, setSelection] = useState<string>('');
   const [hasVoted, setHasVoted] = useState<boolean>(false);
 
-  const totalVotes = props.users.reduce((acc, user) => acc + user.votes, 0);
+  const totalVotes = props.users.reduce((acc, user) => acc + user.points, 0);
+
   const leader = props.users.reduce((max, user) => 
-    user.votes > max.votes ? user : max, 
+    user.points > max.points ? user : max, 
     props.users[0]
   );
 
@@ -44,7 +41,7 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
     <vstack alignment='start' padding='medium'>
       {props.users.map((user) => {
         const percentage = totalVotes > 0 
-          ? Math.round((user.votes / totalVotes) * 100) 
+          ? Math.round((user.points / totalVotes) * 100) 
           : 0;
         return (
           <zstack width='100%'>
@@ -58,10 +55,10 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
               }
               cornerRadius='small'
             />
-            <zstack gap='small' alignment='middle' padding='small'>
-              <text weight='bold'>{user.votes}</text>
+            <zstack alignment='middle' padding='small'>
+              <text weight='bold'>{user.points}</text>
               <hstack>
-                <spacer width='56px' />
+                <spacer width='20px' />
                 <text>{user.username}</text>
               </hstack>
             </zstack>
@@ -95,11 +92,11 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
             onPress={() => {
               const updatedUsers = props.users.map(user => 
                 user.username === selection 
-                  ? { ...user, votes: user.votes + 5} 
+                  ? { ...user, votes: user.points + 5} 
                   : user
               );
-              // ! to have a function from gamePage to set voting on to false and start with new meme and storing 
-              props.updateUsers(updatedUsers)
+              // updateUserVotes(props,context)
+            
               setHasVoted(true);
             }}
           >
@@ -121,8 +118,6 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
             size='small'
             disabled={!selection}
             onPress={() => {
-              props.votingClosed()
-              resetTimer(context)
             }}
           >
             Next Meme 
@@ -133,10 +128,6 @@ export const VotingForm = (props: { users: User[],votingClosed:()=>void ,updateU
       <spacer size="small" />
     </vstack>
   );
-
-  async function resetTimer(context:Devvit.Context) {
-    await context.redis.set('time','reset')
-  }
 
   return (
     <vstack height='100%'>
