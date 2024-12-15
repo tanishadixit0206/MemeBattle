@@ -1,5 +1,31 @@
-import { Devvit } from "@devvit/public-api"
-import { RoomState } from "../utils/types.js";
+import { Context, Devvit } from "@devvit/public-api"
+import { RoomState, User_Details } from "../utils/types.js";
+
+export const myDetails = async (
+  context:Context
+): Promise<User_Details | null> => {
+  try {
+
+    const userDetails = await context.redis.hGetAll('user');
+    if (Object.keys(userDetails).length === 0) {
+      return null;
+    }
+    const user: User_Details = {
+      userId: userDetails.userId,
+      username: userDetails.username || '',
+      role: userDetails.role as 'CREATOR' | 'JURY',
+      points: parseInt(userDetails.points),
+      wins: parseInt(userDetails.wins),
+      timestamp: parseInt(userDetails.timestamp)
+    };
+
+    return user;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return null;
+  }
+};
+
 
 export const UsertoMemeforSession = async (context: Devvit.Context, username: string, memeurl: string) => {
   const existingMemesJson = await context.redis.hGet('memes', username);

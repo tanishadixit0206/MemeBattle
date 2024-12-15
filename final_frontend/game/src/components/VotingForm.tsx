@@ -1,8 +1,8 @@
 import { Devvit, Context, useState } from "@devvit/public-api";
+import {  User_Details } from "../utils/types.js";
+import { updateUserVotes } from "../redis/reddisFunctions.js";
 
-import {  User } from "../utils/types.js";
-
-export const VotingForm = (props: { users: User[] }, context: Context): JSX.Element => {
+export const VotingForm = (props: { users: User_Details[] }, context: Context): JSX.Element => {
   const [selection, setSelection] = useState<string>('');
   const [hasVoted, setHasVoted] = useState<boolean>(false);
 
@@ -95,6 +95,7 @@ export const VotingForm = (props: { users: User[] }, context: Context): JSX.Elem
                   ? { ...user, votes: user.points + 5} 
                   : user
               );
+              // updateUserVotes(props,context)
             
               setHasVoted(true);
             }}

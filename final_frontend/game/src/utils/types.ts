@@ -3,7 +3,7 @@ export type MemeTileProps = {
   memeUrl:string
 }
 
-export type User = {
+export type User_Details = {
   userId: string;
   username: string;
   role: 'CREATOR' | 'JURY';

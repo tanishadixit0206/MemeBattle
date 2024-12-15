@@ -1,6 +1,6 @@
-import { User } from "./types.js";
+import { User_Details } from "./types.js";
 
-export const mockUsers: User[] = [
+export const mockUsers: User_Details[] = [
   {
     userId: 'user001',
     username: 'creative_spark',
