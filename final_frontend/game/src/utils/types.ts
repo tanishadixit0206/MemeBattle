@@ -1,5 +1,5 @@
 export type MemeTileProps = {
-  voting_session:boolean;
+  // voting_session:boolean;
   memeUrl:string
 }
 
@@ -30,4 +30,22 @@ export type RoomState  = {
       timestamp: number;
     }
   };
+}
+
+export type ParticipantsDetails = {
+    [userId: string]: {
+      username: string;
+      role: 'CREATOR' | 'JURY';
+      points: number;
+      wins: number;
+      timestamp: number;
+    }
+}
+
+export type PlayerDetails = {
+      username: string;
+      role: 'CREATOR' | 'JURY';
+      points: number;
+      wins: number;
+      timestamp: number;
 }

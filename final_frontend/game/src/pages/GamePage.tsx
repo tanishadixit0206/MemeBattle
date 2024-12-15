@@ -1,26 +1,55 @@
-import { Devvit, useForm, useState } from "@devvit/public-api";
+import { Devvit, Participant, useForm, useState } from "@devvit/public-api";
 import VotingForm from "../components/VotingForm.js";
 import { mockUsers } from "../utils/constants.js";
 import { MemeTile } from "../components/MemeTile.js";
 import { ParticipantsPanel } from "../components/ParticipantsPanel.js";
-import { RoomState } from "../utils/types.js";
-import { fetchRoomState } from "../redis/reddisFunctions.js";
+import { ParticipantsDetails, PlayerDetails, RoomState } from "../utils/types.js";
+import { fetchRoomState, setCurrentCreatorinRedis } from "../redis/reddisFunctions.js";
+import { fetchMeme } from "../apis/memeFunctions.js";
 
 
 export const GamePage = (context:Devvit.Context):JSX.Element =>{
 
-  const [voting_session,setVoting_session] = useState<boolean>(false)
-  const [is_creator, setIs_creator] = useState<boolean>(false)
+  const [sessionOn,setSessionOn] = useState<boolean>(false)
+  const[trial,setTrial] = useState<number>(0)
   const [messages,setMessages] = useState<string[]>([])
   const [votingFormDisplayed,setVotingFormDisplayed] = useState<boolean>(false)
   const [memeUrl,setMemeUrl] = useState<string>('')
   const [room,setRoom] = useState<RoomState | null>(null) 
+  const [playersFetched, setPlayersFetched] = useState<boolean>(false)
+  const [playerDetails,setPlayerDetails] = useState<PlayerDetails[]|null>(null)
+  const [currentCreator,setCurrentCreator] = useState<string|null>(null)
 
-  async function fetchParticipants(roomID:string){
-    const room = await fetchRoomState(context,roomID)
-    setRoom(room)
+  function extractPlayersFromRoomState(roomState: RoomState): PlayerDetails[] {
+    return Object.entries(roomState.participants).map(([userId, participant]) => ({
+      username: participant.username,
+      role: participant.role,
+      points: participant.points,
+      wins: participant.wins,
+      timestamp: participant.timestamp
+    }));
+  }
+
+  function assignCreator(){
+    if(playerDetails){
+      if(trial != 0 && trial === 4){
+        setTrial(trial + 1)
+      }
+      setCurrentCreator(playerDetails[trial].username)
+      setCurrentCreatorinRedis(context,playerDetails[trial].username)
+    }
+  }
+
+  async function sessionStart(roomID:string){
+    const room_1 = await fetchRoomState(context,roomID)
+    setRoom(room_1)
     if(room){
-
+      const players = extractPlayersFromRoomState(room)
+      setPlayerDetails(players)
+      setPlayersFetched(true)
+      const url_1 = await fetchMeme()
+      setMemeUrl(url_1)
+      assignCreator()
     }
   }
   
@@ -55,10 +84,10 @@ export const GamePage = (context:Devvit.Context):JSX.Element =>{
           <text weight="bold" size="xxlarge" color="white">MEMEWAR</text>
         </hstack>
         <hstack width="100%" height="88%" padding="medium">
-          <ParticipantsPanel {...context} />
+          {playersFetched ? <ParticipantsPanel context={context} players={playerDetails} />:<text>Fetching pplayers' details ...</text>}
           <spacer width="3%" />
           <vstack padding="small" width="38%" border="thick" borderColor="#FFB22C" cornerRadius="medium" backgroundColor="#FFDE4D">
-            <MemeTile voting_session={voting_session} memeUrl={memeUrl} />
+            {memeUrl?<MemeTile memeUrl={memeUrl} />:null}
           </vstack>
           <spacer width="3%" />
           <vstack width="31.5%" border="thick" borderColor="#FFB22C" cornerRadius="medium" backgroundColor="#FFDE4D" >

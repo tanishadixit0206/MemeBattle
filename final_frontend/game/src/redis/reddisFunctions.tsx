@@ -94,3 +94,9 @@ export async function fetchUserDetails(
     return null;
   }
 }
+
+
+export async function setCurrentCreatorinRedis(context:Devvit.Context , username:string){
+  await context.redis.set('CC',username)
+  return true
+}
